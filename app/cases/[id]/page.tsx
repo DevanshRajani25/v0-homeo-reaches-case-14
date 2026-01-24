@@ -28,6 +28,8 @@ import { detectAndRespond as detectAndRespondCase12 } from "@/data/case-keywords
 import { detectAndRespond as detectAndRespondCase13 } from "@/data/case-keywords/case-13-keywords"
 import { detectAndRespond as detectAndRespondCase14 } from "@/data/case-keywords/case-14-keywords"
 
+/* Case 15 currently uses stdRespond for default behavior */
+
 /* -------------------- Shared helpers -------------------- */
 const join = (...k: string[]) => k.join("+")
 
@@ -380,6 +382,8 @@ export default function InteractionPage() {
         setPatientDialogue("Doctor, I have a burn wound on my hand.")
       } else if (id === 14) {
         setPatientDialogue("Hello doctor.. This painful swelling in my beard area is unbearable.")
+      } else if (id === 15) {
+        setPatientDialogue("Doctor, I have been coughing for a week now and it's getting worse.")
       }
     }
     run()
@@ -443,6 +447,11 @@ export default function InteractionPage() {
     return detectAndRespondCase14(question)
   }
 
+  function case15Respond(q: string): string | null {
+    // Case 15 uses standard response system for now
+    return stdRespond(q)
+  }
+
   function stdRespond(text: string): string | null {
     const result = detectKeywords(text)
 
@@ -485,6 +494,7 @@ export default function InteractionPage() {
       else if (id === 12) res = case12Respond(q)
       else if (id === 13) res = case13Respond(q)
       else if (id === 14) res = case14Respond(q)
+      else if (id === 15) res = case15Respond(q)
       else if (id >= 7 && id <= 20) res = stdRespond(q)
 
       if (!res) {
@@ -523,7 +533,9 @@ export default function InteractionPage() {
                           ? "Case 13 – Anil Sharma"
                           : id === 14
                             ? "Case 14 – Vimal Pansuriya"
-                            : `Case ${id} – ${activeCase?.patientName ?? "Virtual Patient"}`
+                            : id === 15
+                              ? "Case 15 – Arun Kumar"
+                              : `Case ${id} – ${activeCase?.patientName ?? "Virtual Patient"}`
 
   const CaseImage = () => {
     const src =
@@ -551,7 +563,9 @@ export default function InteractionPage() {
                             ? "/images/cases/case-13-burn.jpg"
                             : id === 14
                               ? "/images/cases/case-14-rash.jpg"
-                              : activeCase?.image || "/virtual-patient.jpg"
+                              : id === 15
+                                ? "/images/cases/case-15-cough.jpg"
+                                : activeCase?.image || "/virtual-patient.jpg"
     return (
       <img
         src={src || "/placeholder.svg?height=160&width=160&query=virtual%20patient"}

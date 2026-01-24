@@ -37,8 +37,10 @@ const CASES = Array.from({ length: 20 }).map((_, i) => ({
                               ? "Anil Sharma"
                             : i + 1 === 14
                               ? "Vimal Pansuriya"
+                            : i + 1 === 15
+                              ? "Arun Kumar"
                               : `Case ${i + 1}`,
-  isLocked: i + 1 > 14,
+  isLocked: i + 1 > 15,
 }))
 
 export default function CaseListPage() {
