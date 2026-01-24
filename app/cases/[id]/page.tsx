@@ -27,8 +27,7 @@ import { detectAndRespond as detectAndRespondCase11 } from "@/data/case-keywords
 import { detectAndRespond as detectAndRespondCase12 } from "@/data/case-keywords/case-12-keywords"
 import { detectAndRespond as detectAndRespondCase13 } from "@/data/case-keywords/case-13-keywords"
 import { detectAndRespond as detectAndRespondCase14 } from "@/data/case-keywords/case-14-keywords"
-
-/* Case 15 currently uses stdRespond for default behavior */
+import { detectAndRespond as detectAndRespondCase15 } from "@/data/case-keywords/case-15-keywords"
 
 /* -------------------- Shared helpers -------------------- */
 const join = (...k: string[]) => k.join("+")
@@ -447,9 +446,8 @@ export default function InteractionPage() {
     return detectAndRespondCase14(question)
   }
 
-  function case15Respond(q: string): string | null {
-    // Case 15 uses standard response system for now
-    return stdRespond(q)
+  function case15Respond(question: string): string {
+    return detectAndRespondCase15(question)
   }
 
   function stdRespond(text: string): string | null {

@@ -155,6 +155,18 @@ export default function VitalsPage() {
         ]
       : []
 
+  const sureshVitalsCase15 =
+    id === 15
+      ? [
+          { label: "Blood Pressure", value: "126/80 mmHg" },
+          { label: "Pulse", value: "82/min" },
+          { label: "Temperature", value: "98.4°F" },
+          { label: "Respiration Rate", value: "22/min" },
+          { label: "General Condition", value: "Irritable, wants rest, avoids movement" },
+          { label: "Chest Examination", value: "Dry cough, chest pain on coughing, no expectoration" },
+        ]
+      : []
+
   const title =
     id === 1
       ? "Maria Johnson – Vitals"
@@ -172,7 +184,9 @@ export default function VitalsPage() {
                   ? "Rahul Patel – Vitals"
                   : id === 11
                     ? "Ramesh Patel – Vitals"
-                    : `${activeCase?.patientName ?? "Virtual Patient"} – Vitals`
+                    : id === 15
+                      ? "Suresh Mehta – Vitals"
+                      : `${activeCase?.patientName ?? "Virtual Patient"} – Vitals`
 
   const vitalsToShow =
     id === 1
@@ -185,7 +199,9 @@ export default function VitalsPage() {
             ? rameshVitals
             : id === 11
               ? rameshVitalsCase11
-              : []
+              : id === 15
+                ? sureshVitalsCase15
+                : []
 
   return (
     <main className="min-h-screen relative p-6">
@@ -195,6 +211,7 @@ export default function VitalsPage() {
           <CardContent className="p-8 space-y-6">
             <h2 className="text-3xl font-extrabold text-indigo-700 text-center">{title}</h2>
             {id === 10 && <p className="text-sm text-amber-600 font-semibold text-center">X-ray of fracture</p>}
+            {id === 15 && <p className="text-sm text-amber-600 font-semibold text-center">Chronic dry pleuritic cough - BRYONIA ALBA case</p>}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {vitalsToShow.map((s) => (
                 <div key={s.label} className="p-4 rounded-xl bg-gradient-to-r from-indigo-50 to-sky-50 border">
