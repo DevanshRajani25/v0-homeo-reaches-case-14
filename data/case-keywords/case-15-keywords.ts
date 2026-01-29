@@ -1,244 +1,259 @@
+/**
+ * CASE 15 - SURESH MEHTA (BRYONIA ALBA)
+ * Chronic dry cough with chest pain
+ * Patient: Irritable, serious, wants silence, hates disturbance
+ * Remedy: BRYONIA ALBA - dry painful cough, worse from motion & talking, better by rest & pressure
+ */
+
 export function detectAndRespond(question: string): string {
   const q = question.toLowerCase().trim()
 
-  // Rule 1: Single-word casual greeting (h or H)
+  // PRIORITY 1: CASUAL GREETING RULES (ONLY single word, no other logic)
+  // Rule 1: Single word starting with h/H
   if (q.length === 1 && /^h/i.test(q)) {
     return "Hello doctor.."
   }
 
-  // Rule 2: Single-word casual greeting (o or O)
+  // Rule 2: Single word starting with o/O
   if (q.length === 1 && /^o/i.test(q)) {
     return "Okk doctor.."
   }
 
-  // Comprehensive keyword-response mapping with alternating responses
-  const responses: Record<string, string[]> = {
-    // Name
+  // All keyword responses - exact as specified
+  const keywordResponses: Record<string, string[]> = {
+    // NAME
     name: [
-      "My name is Suresh doctor. Speaks slowly, holds chest. Please ask briefly, talking increases my cough.",
-      "Suresh Mehta. Irritated expression. Even small conversation disturbs me.",
+      "My name is Suresh doctor… (speaks slowly, holds chest) please ask briefly, talking increases my cough.",
+      "Suresh Mehta… (irritated expression) even small conversation disturbs me.",
     ],
-    // Age
+    // AGE
     age: [
-      "I'm 38 years old doctor. Serious tone. I just want rest.",
-      "38 doctor. Nods, avoids movement. Movement worsens everything.",
+      "I'm 38 years old doctor… (serious tone) I just want rest.",
+      "38 doctor… (nods, avoids movement) movement worsens everything.",
     ],
-    // Occupation
+    // OCCUPATION
     occupation: [
-      "I'm an accountant doctor. Annoyed. Sitting long hours with cough is painful.",
-      "Office work doctor. Frowns. Concentration is disturbed.",
+      "I'm an accountant doctor… (annoyed) sitting long hours with cough is painful.",
+      "Office work doctor… (frowns) concentration is disturbed.",
     ],
-    // Marital Status
+    // MARITAL STATUS
     marriage: [
-      "Yes doctor, married. Slightly irritated. Everyone keeps asking questions.",
-      "Married. Dry reply. I prefer to be left alone.",
+      "Yes doctor, married… (slightly irritated) everyone keeps asking questions.",
+      "Married… (dry reply) I prefer to be left alone.",
     ],
-    // Address
+    // ADDRESS
     address: [
-      "I live in Surat doctor. Low voice. Climate change affects me.",
-      "Surat. Serious face. Please continue.",
+      "I live in Surat doctor… (low voice) climate change affects me.",
+      "Surat… (serious face) please continue.",
     ],
-    // Chief Complaint
+    // CHIEF COMPLAINT
     complaint: [
-      "Dry cough with chest pain doctor. Presses chest. Every cough hurts.",
-      "Persistent dry cough. Irritated. Pain increases on coughing.",
+      "Dry cough with chest pain doctor… (presses chest) every cough hurts.",
+      "Persistent dry cough… (irritated) pain increases on coughing.",
     ],
-    // Location of Pain
+    // LOCATION
     location: [
-      "Pain is in the chest doctor. Holds chest firmly. Especially while coughing.",
-      "Inside chest. Avoids deep breath. Movement increases pain.",
+      "Pain is in the chest doctor… (holds chest firmly) especially while coughing.",
+      "Inside chest… (avoids deep breath) movement increases pain.",
     ],
-    // Sensation
+    // SENSATION
     sensation: [
-      "It feels stitching pain doctor. Grimaces. Like something is tearing.",
-      "Sharp pain with cough. Annoyed. Very uncomfortable.",
+      "It feels stitching pain doctor… (grimaces) like something is tearing.",
+      "Sharp pain with cough… (annoyed) very uncomfortable.",
     ],
-    // Aggravation (Worse)
+    // AGGRAVATION
     aggravation: [
-      "Movement makes it worse doctor. Stays still. Even turning increases pain.",
-      "Talking worsens cough. Irritated. I prefer silence.",
+      "Movement makes it worse doctor… (stays still) even turning increases pain.",
+      "Talking worsens cough… (irritated) I prefer silence.",
     ],
-    // Amelioration (Better)
+    // AMELIORATION
     amelioration: [
-      "Rest gives relief doctor. Relaxes slightly. Lying still helps.",
-      "Pressing the chest helps doctor. Hand on chest. Movement is bad.",
+      "Rest gives relief doctor… (relaxes slightly) lying still helps.",
+      "Pressing the chest helps doctor… (hand on chest) movement is bad.",
     ],
-    // Concomitant Symptoms
+    // CONCOMITANT
     concomitant: [
-      "I feel very irritable doctor. Short replies. Don't like disturbance.",
-      "Dry mouth and thirst doctor. Serious. Want left alone.",
+      "I feel very irritable doctor… (short replies) don't like disturbance.",
+      "Dry mouth and thirst doctor… (serious) want left alone.",
     ],
-    // Onset
+    // ONSET
     onset: [
-      "It started gradually doctor. Thinking. Worsened with time.",
-      "Slow onset. Nods. Became persistent.",
+      "It started gradually doctor… (thinking) worsened with time.",
+      "Slow onset… (nods) became persistent.",
     ],
-    // Duration
+    // DURATION
     duration: [
-      "Around 2-3 months doctor. Tired. Not improving.",
-      "Many weeks. Annoyed. Same problem.",
+      "Around 2–3 months doctor… (tired) not improving.",
+      "Many weeks… (annoyed) same problem.",
     ],
-    // Progression
+    // PROGRESSION
     progression: [
-      "Yes doctor, it is increasing. Concerned. Pain is more now.",
-      "Definitely worsening. Serious. Especially with activity.",
+      "Yes doctor, it is increasing… (concerned) pain is more now.",
+      "Definitely worsening… (serious) especially with activity.",
     ],
-    // History of Present Illness
+    // HISTORY OF PRESENT ILLNESS
     history: [
-      "No major illness before doctor. Irritated. This cough is the main issue now.",
+      "No major illness before doctor… (irritated) this cough is the main issue now.",
     ],
-    // Family History
+    // FAMILY HISTORY
     family: [
-      "No significant family illness doctor. Brief reply.",
+      "No significant family illness doctor… (brief reply).",
     ],
-    // Appetite
+    // APPETITE
     appetite: [
-      "Appetite is normal doctor. Plain tone. No interest in food.",
-      "Normal hunger. Indifferent. Eating doesn't matter.",
+      "Appetite is normal doctor… (plain tone) no interest in food.",
+      "Normal hunger… (indifferent) eating doesn't matter.",
     ],
-    // Thirst
+    // THIRST
     thirst: [
-      "I feel very thirsty doctor. Firm. Drink large quantities.",
-      "Excess thirst. Serious. Prefer cold water.",
+      "I feel very thirsty doctor… (firm) drink large quantities.",
+      "Excess thirst… (serious) prefer cold water.",
     ],
-    // Tongue
+    // TONGUE
     tongue: [
-      "Tongue looks dry doctor. Brief.",
+      "Tongue looks dry doctor… (brief).",
     ],
-    // Urine
+    // URINE
     urine: [
-      "Urine is normal doctor. Short answer.",
+      "Urine is normal doctor… (short answer).",
     ],
-    // Stool
+    // STOOL
     stool: [
-      "Stool is dry doctor. Brief reply.",
-      "Sometimes constipated. Annoyed.",
+      "Stool is dry doctor… (brief reply).",
+      "Sometimes constipated… (annoyed).",
     ],
-    // Desire (Food/Drink Cravings)
+    // DESIRE
     desire: [
-      "No special cravings doctor. Indifferent.",
+      "No special cravings doctor… (indifferent).",
     ],
-    // Aversion
+    // AVERSION
     aversion: [
-      "Don't like disturbance or talking doctor. Irritated.",
+      "Don't like disturbance or talking doctor… (irritated).",
     ],
-    // Sweat
+    // SWEAT
     sweat: [
-      "Normal sweating doctor. Neutral.",
+      "Normal sweating doctor… (neutral).",
     ],
-    // Sleep
+    // SLEEP
     sleep: [
-      "Sleep disturbed doctor. Irritated. Cough wakes me.",
-      "Poor sleep. Tired. Pain disturbs rest.",
+      "Sleep disturbed doctor… (irritated) cough wakes me.",
+      "Poor sleep… (tired) pain disturbs rest.",
     ],
-    // Dreams
+    // DREAMS
     dream: [
-      "No particular dreams doctor. Short reply.",
+      "No particular dreams doctor… (short reply).",
     ],
-    // Thermal Preference
+    // THERMALS
     thermal: [
-      "I feel more comfortable in cool air doctor. Neutral.",
-      "Heat worsens discomfort. Serious.",
+      "I feel more comfortable in cool air doctor… (neutral).",
+      "Heat worsens discomfort… (serious).",
     ],
-    // Mental State
+    // MENTAL GENERALS
     mental: [
-      "I get irritated easily doctor. Stern face. Don't like being questioned.",
-      "I want silence and rest. Firm tone. Disturbance annoys me.",
-    ],
-    // Cough-specific
-    cough: [
-      "Persistent dry cough with chest pain doctor. Every cough causes sharp pain.",
-      "This painful cough has been with me for months doctor. Makes me very irritable.",
+      "I get irritated easily doctor… (stern face) don't like being questioned.",
+      "I want silence and rest… (firm tone) disturbance annoys me.",
     ],
   }
 
-  // Priority 1: Exact single-keyword matches first
-  for (const [category, responseList] of Object.entries(responses)) {
-    if (q === category || q.split(/\s+/).includes(category)) {
-      return responseList[Math.floor(Math.random() * responseList.length)]
-    }
-  }
-
-  // Priority 2: Complex pattern matching with comprehensive coverage
-  const patterns = [
-    // Name patterns
-    { regex: /name|who|you|identity|introduce/, key: "name" },
-    // Age patterns
-    { regex: /age|old|years|how.*old|years.*old/, key: "age" },
-    // Occupation patterns
-    { regex: /occupation|work|job|what.*do|do.*you|doing|profession/, key: "occupation" },
-    // Marriage patterns
-    { regex: /marri|wed|single|spouse|partner|wife|husband/, key: "marriage" },
-    // Address patterns
-    { regex: /address|live|where.*live|location|city|town|place/, key: "address" },
-    // Chief Complaint patterns
-    { regex: /main|chief|complaint|problem|issue|concern/, key: "complaint" },
-    // Location patterns
-    { regex: /where.*pain|location.*pain|which.*side|side.*pain|pain.*where/, key: "location" },
-    // Sensation patterns
-    { regex: /sensation|feel|how.*feel|how.*pain|how.*it.*feel|pain.*like/, key: "sensation" },
-    // Aggravation patterns
-    { regex: /worse|worsen|aggravat|modality|when.*worse|make.*worse|motion/, key: "aggravation" },
-    // Amelioration patterns
-    { regex: /relief|better|ameliorat|improve|when.*better|help/, key: "amelioration" },
-    // Concomitant patterns
-    { regex: /concomit|other.*symptom|any.*other|other.*complain/, key: "concomitant" },
-    // Onset patterns
-    { regex: /onset|when.*start|when.*began|started|begin/, key: "onset" },
-    // Duration patterns
-    { regex: /duration|how.*long|long.*time|how.*days|many.*week|many.*month/, key: "duration" },
-    // Progression patterns
-    { regex: /progress|increas|how.*increas|worsening/, key: "progression" },
-    // History patterns
-    { regex: /history|past.*illness|prior.*illness|any.*history|before/, key: "history" },
-    // Family patterns
-    { regex: /family|parents|sibling|mother|father|relative/, key: "family" },
-    // Appetite patterns
-    { regex: /appetite|hunger|eat|food|meal|eating/, key: "appetite" },
-    // Thirst patterns
-    { regex: /thirst|thirsty|water|drink|fluid/, key: "thirst" },
-    // Tongue patterns
-    { regex: /tongue/, key: "tongue" },
-    // Urine patterns
-    { regex: /urine|urinate|pass.*urine|micturition/, key: "urine" },
-    // Stool patterns
-    { regex: /stool|bowel|constipat|feces/, key: "stool" },
-    // Desire patterns
-    { regex: /desire|craving|like.*eat|fancy/, key: "desire" },
-    // Aversion patterns
-    { regex: /aversion|dislike|don't.*like|hate|avoid/, key: "aversion" },
-    // Sweat patterns
-    { regex: /sweat|perspir|moisture/, key: "sweat" },
-    // Sleep patterns
-    { regex: /sleep|sleeping|rest|insomnia|sleep.*problem|cannot.*sleep/, key: "sleep" },
-    // Dream patterns
-    { regex: /dream|dreaming|nightmare/, key: "dream" },
-    // Thermal patterns
-    { regex: /thermal|cold|heat|fever|chilly|temperature/, key: "thermal" },
-    // Mental patterns
-    { regex: /mental|anger|irritable|irritat|anxiety|anxious|mood|mind|fear|sad|emotion/, key: "mental" },
-    // Cough patterns
-    { regex: /cough|dry|painful|pain|thorax|chest/, key: "cough" },
+  // PRIORITY 2: Natural language keyword detection from user input
+  // Maps various phrasings to response categories
+  const keywordPatterns = [
+    // NAME (what+name, name, etc.)
+    { patterns: [/\bname\b/, /what.*name/, /who.*you/], category: "name" },
+    // AGE (age, how+old+you, etc.)
+    { patterns: [/\bage\b/, /how.*old/, /\byears\b.*old/], category: "age" },
+    // OCCUPATION (occupation, what+do, doing, do)
+    { patterns: [/occupation/, /what.*do/, /\bdoing\b/, /\bdo\b/, /work/], category: "occupation" },
+    // MARITAL STATUS (marriage, married, single, etc.)
+    { patterns: [/marri/, /married/, /single/, /spouse/], category: "marriage" },
+    // ADDRESS (address, where+live, living)
+    { patterns: [/address/, /where.*live/, /living/, /\bcity\b/, /\btown\b/], category: "address" },
+    // CHIEF COMPLAINT (main+complain, complaint, chief+complaint)
+    { patterns: [/main.*complaint/, /\bcomplaint\b/, /chief/, /problem/, /issue/], category: "complaint" },
+    // LOCATION (where+pain, which+side, location+pain, etc.)
+    { patterns: [/where.*pain/, /which.*side/, /location.*pain/, /where.*exactly/], category: "location" },
+    // SENSATION (sensation, how+sensation, how+feel, how+pain)
+    { patterns: [/sensation/, /how.*feel/, /how.*pain/, /how.*sensation/], category: "sensation" },
+    // AGGRAVATION (aggravation, worse, worsen, modality)
+    { patterns: [/aggravat/, /worse/, /worsen/, /modality/, /when.*worse/], category: "aggravation" },
+    // AMELIORATION (amelioration, relief, better, modality)
+    { patterns: [/ameliorat/, /relief/, /\bbetter\b/, /improve/, /when.*relief/], category: "amelioration" },
+    // CONCOMITANT (concomitant, any+other+complaint, other)
+    { patterns: [/concomitant/, /any.*other.*complain/, /other.*symptom/], category: "concomitant" },
+    // ONSET (onset, when+start, when+started, when+begins)
+    { patterns: [/onset/, /when.*start/, /when.*began/, /began/], category: "onset" },
+    // DURATION (duration, how+long, how+many+days, how+much+time)
+    { patterns: [/duration/, /how.*long/, /many.*day/, /much.*time/], category: "duration" },
+    // PROGRESSION (progression, how+increase, how+progressive)
+    { patterns: [/progression/, /how.*increas/, /progressive/, /worsening/], category: "progression" },
+    // HISTORY OF PRESENT ILLNESS (history, any+history, past, in+past)
+    { patterns: [/\bhistory\b/, /any.*history/, /\bpast\b/, /before/], category: "history" },
+    // FAMILY HISTORY (family, parents, partner, family+history)
+    { patterns: [/family/, /parents/, /partner/, /sibling/], category: "family" },
+    // APPETITE (appetite, hunger, eat, eating, meal)
+    { patterns: [/appetite/, /hunger/, /\beat\b/, /eating/, /meal/], category: "appetite" },
+    // THIRST (thirst, thirsty, water, water+drink)
+    { patterns: [/thirst/, /thirsty/, /water/, /drink/], category: "thirst" },
+    // TONGUE (tongue)
+    { patterns: [/tongue/], category: "tongue" },
+    // URINE (urine, urinate, urinates, pass+urine)
+    { patterns: [/urine/, /urinate/, /pass.*urine/], category: "urine" },
+    // STOOL (stool, bowel, constipation)
+    { patterns: [/stool/, /bowel/, /constipat/], category: "stool" },
+    // DESIRE (desire, craving, food+like, like+eat)
+    { patterns: [/desire/, /craving/, /like.*eat/, /fancy/], category: "desire" },
+    // AVERSION (aversion, dislike, don't+like)
+    { patterns: [/aversion/, /dislike/, /don't.*like/, /hate/], category: "aversion" },
+    // SWEAT (sweat, perspiration, how+sweat)
+    { patterns: [/sweat/, /perspir/, /moisture/], category: "sweat" },
+    // SLEEP (sleep, sleeping, sleep+problem)
+    { patterns: [/\bsleep\b/, /sleeping/, /sleep.*problem/, /rest/], category: "sleep" },
+    // DREAMS (dream, dreams, dreaming)
+    { patterns: [/\bdream/, /dreaming/, /nightmare/], category: "dream" },
+    // THERMALS (thermal, cold, heat, fever, chilly)
+    { patterns: [/thermal/, /cold/, /\bheat\b/, /fever/, /chilly/], category: "thermal" },
+    // MENTAL GENERALS (extensive mental/emotional keywords)
+    {
+      patterns: [
+        /mental/, /mentall/, /anger/, /any.*anger/, /angry/, /irritable/, /irritat/,
+        /anxiety/, /anxious/, /mood/, /mind/, /fear/, /sad/, /emotion/,
+      ],
+      category: "mental",
+    },
   ]
 
-  for (const { regex, key } of patterns) {
-    if (regex.test(q)) {
-      const responseList = responses[key]
-      if (responseList && responseList.length > 0) {
-        return responseList[Math.floor(Math.random() * responseList.length)]
+  // Check each pattern against user input
+  for (const { patterns, category } of keywordPatterns) {
+    for (const pattern of patterns) {
+      if (pattern.test(q)) {
+        const responses = keywordResponses[category]
+        if (responses && responses.length > 0) {
+          // Return random response to maintain conversational flow
+          return responses[Math.floor(Math.random() * responses.length)]
+        }
       }
     }
   }
 
-  // Fallback: Return random response from any category to ensure system never fails
+  // PRIORITY 3: If no keyword match, check for cough-related terms (core pathology)
+  if (/cough|dry|painful|pain|chest|thorax/.test(q)) {
+    const coughResponses = [
+      "Dry cough with chest pain doctor… (presses chest) every cough hurts.",
+      "This persistent dry cough makes me very irritable doctor… I want silence.",
+    ]
+    return coughResponses[Math.floor(Math.random() * coughResponses.length)]
+  }
+
+  // PRIORITY 4: System never fails - fallback responses
   const allResponses: string[] = []
-  for (const responseList of Object.values(responses)) {
+  for (const responseList of Object.values(keywordResponses)) {
     allResponses.push(...responseList)
   }
+
   if (allResponses.length > 0) {
     return allResponses[Math.floor(Math.random() * allResponses.length)]
   }
 
-  // Final fallback with patient-appropriate response
-  return "Please ask me more clearly doctor. I prefer brief conversations."
+  // Final fallback - patient-appropriate default
+  return "Please ask me more clearly doctor… I prefer brief conversations."
 }
