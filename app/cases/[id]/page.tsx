@@ -563,7 +563,9 @@ export default function InteractionPage() {
                               ? "/images/cases/case-14-rash.jpg"
                               : id === 15
                                 ? "/images/cases/case-15-cough.jpg"
-                                : activeCase?.image || "/virtual-patient.jpg"
+                                : id === 16
+                                  ? "/images/cases/case-16-abdominal-pain.jpg"
+                                  : activeCase?.image || "/virtual-patient.jpg"
     return (
       <img
         src={src || "/placeholder.svg?height=160&width=160&query=virtual%20patient"}
@@ -592,6 +594,8 @@ export default function InteractionPage() {
         {id === 12 && <p className="text-sm text-amber-600 font-semibold">Neck swelling</p>}
         {id === 13 && <p className="text-sm text-amber-600 font-semibold">Burn wound</p>}
         {id === 14 && <p className="text-sm text-amber-600 font-semibold">Neck rash inflammation</p>}
+        {id === 15 && <p className="text-sm text-amber-600 font-semibold">Chronic dry cough - BRYONIA ALBA</p>}
+        {id === 16 && <p className="text-sm text-amber-600 font-semibold">Abdominal pain</p>}
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* Left: patient summary card */}

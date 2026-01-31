@@ -5,7 +5,7 @@ const def: CaseDefinition = {
   patientName: "Rama Tiwari",
   age: 46,
   intro: "Doctor, this lump near my ear keeps growing… I’m very worried.",
-  image: "/images/cases/case-16.jpg",
+  image: "/images/cases/case-16-abdominal-pain.jpg",
   defaultResponse: "Please ask more clearly.",
   keywords: [
     {
