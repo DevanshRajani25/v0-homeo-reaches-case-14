@@ -92,9 +92,9 @@ export const CASE_METADATA = [
   },
   {
     caseNumber: 16,
-    title: "Case 16",
-    description: "Homeopathic case study",
-    image: "/images/cases/case-16.jpg",
+    title: "Priya Sharma",
+    description: "Abdominal pain with discomfort",
+    image: "/images/cases/case-16-abdominal-pain.jpg",
   },
   {
     caseNumber: 17,
