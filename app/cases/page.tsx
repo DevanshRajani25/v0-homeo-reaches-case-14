@@ -40,7 +40,7 @@ const CASES = Array.from({ length: 20 }).map((_, i) => ({
                             : i + 1 === 15
                               ? "Suresh Mehta"
                             : i + 1 === 16
-                              ? "Ruhi"
+                              ? "Priya Sharma"
                               : `Case ${i + 1}`,
   isLocked: i + 1 > 16,
 }))

@@ -92,8 +92,8 @@ export const CASE_METADATA = [
   },
   {
     caseNumber: 16,
-    title: "Ruhi",
-    description: "PCOD with irregular periods - PULSATILLA NIGRICANS",
+    title: "Priya Sharma",
+    description: "Abdominal pain with discomfort",
     image: "/images/cases/case-16-abdominal-pain.jpg",
   },
   {

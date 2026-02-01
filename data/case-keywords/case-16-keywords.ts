@@ -1,32 +1,30 @@
 /**
- * CASE 16 - RUHI (PULSATILLA NIGRICANS)
+ * CASE 16 — RUHI (PULSATILLA NIGRICANS)
  * PCOD (Polycystic Ovarian Disease)
  * 
- * STRICT RESPONSE CONTROL:
+ * ✅ STRICT RESPONSE ENGINE
  * - Patient responds ONLY with predefined keyword → response mappings
- * - No AI-generated answers or paraphrasing
- * - No generic assistant fallbacks
- * - Strict keyword matching with symptom priority
- * - Fixed fallback: "I don't notice anything specific about that."
- * - Maintains PULSATILLA personality (mild, emotional, soft, tearful)
+ * - No AI generation, no paraphrasing, no assistant fallbacks
+ * - Fixed fallback only: "I don't notice anything specific about that."
+ * - Responses maintain Pulsatilla personality: soft, emotional, gentle, shy, comfort-seeking
  */
 
 export function detectAndRespond(question: string): string {
   const q = question.toLowerCase().trim()
 
-  // ===== PRIORITY 1: CASUAL GREETING RULES (single word only) =====
-  // Rule 1: Single word starting with h/H
-  if (q.length === 1 && /^h/i.test(q)) {
+  // ========== STEP 1: CASUAL GREETING RULE (TOP PRIORITY) ==========
+  // Single word starting with h/H
+  if (q.length === 1 && /^h/.test(q)) {
     return "Hello doctor.. (soft smile, gentle tone)"
   }
 
-  // Rule 2: Single word starting with o/O
-  if (q.length === 1 && /^o/i.test(q)) {
+  // Single word starting with o/O
+  if (q.length === 1 && /^o/.test(q)) {
     return "Okk doctor.. (nods slowly, calm face)"
   }
 
-  // ===== ALL KEYWORD RESPONSES (as specified) =====
-  const keywordResponses: Record<string, string[]> = {
+  // ========== RESPONSE MAPPINGS ==========
+  const responses: Record<string, string[]> = {
     name: [
       "My name is Ruhi doctor… (soft voice, slight smile) I feel shy talking about my problem.",
       "Ruhi… (looks down, emotional eyes)",
@@ -133,84 +131,67 @@ export function detectAndRespond(question: string): string {
     ],
   }
 
-  // ===== PRIORITY 2: STRICT KEYWORD PATTERN DETECTION =====
-  // Maps user keywords to exact response categories
-  const detectionPatterns = [
-    // NAME
-    { keywords: [/\bname\b/, /what\s+.*\bname/, /who\s+are\s+you/], category: "name" },
-    // AGE
-    { keywords: [/\bage\b/, /how\s+old/, /years\s+old/], category: "age" },
-    // OCCUPATION
-    { keywords: [/occupation/, /what\s+.*do/, /student/, /work/], category: "occupation" },
-    // MARITAL STATUS
-    { keywords: [/marri/, /married/, /single/], category: "marriage" },
-    // ADDRESS
-    { keywords: [/address/, /where.*live/, /living/], category: "address" },
-    // CHIEF COMPLAINT
-    { keywords: [/complaint/, /problem/, /pcod/, /period/, /mense/, /cycle/], category: "complaint" },
-    // LOCATION
-    { keywords: [/where.*pain/, /which.*side/, /location.*pain/], category: "location" },
-    // SENSATION
-    { keywords: [/sensation/, /how.*feel/, /how.*pain/], category: "sensation" },
-    // AGGRAVATION
-    { keywords: [/aggravat/, /worse/, /worsen/], category: "aggravation" },
-    // AMELIORATION
-    { keywords: [/ameliorat/, /relief/, /better/, /help/], category: "amelioration" },
-    // CONCOMITANT
-    { keywords: [/concomitant/, /other.*symptom/, /weight/, /mood/], category: "concomitant" },
-    // ONSET
-    { keywords: [/onset/, /when.*start/, /when.*began/], category: "onset" },
-    // DURATION
-    { keywords: [/duration/, /how.*long/, /how.*many/], category: "duration" },
-    // PROGRESSION
-    { keywords: [/progression/, /how.*increas/, /worsening/], category: "progression" },
-    // HISTORY
-    { keywords: [/history/, /past/], category: "history" },
-    // FAMILY
-    { keywords: [/family/, /parents/, /mother/], category: "family" },
-    // APPETITE
-    { keywords: [/appetite/, /hunger/, /eat/, /meal/], category: "appetite" },
-    // THIRST
-    { keywords: [/thirst/, /thirsty/, /water/, /drink/], category: "thirst" },
-    // TONGUE
-    { keywords: [/tongue/], category: "tongue" },
-    // URINE
-    { keywords: [/urine/, /urinate/], category: "urine" },
-    // STOOL
-    { keywords: [/stool/, /bowel/, /constipat/], category: "stool" },
-    // DESIRE
-    { keywords: [/desire/, /craving/, /sweet/], category: "desire" },
-    // AVERSION
-    { keywords: [/aversion/, /dislike/, /don't.*like/], category: "aversion" },
-    // SWEAT
-    { keywords: [/sweat/, /perspir/], category: "sweat" },
-    // SLEEP
-    { keywords: [/sleep/, /sleeping/, /rest/], category: "sleep" },
-    // DREAMS
-    { keywords: [/dream/, /dreaming/], category: "dream" },
-    // THERMALS
-    { keywords: [/thermal/, /cold/, /heat/, /fever/], category: "thermal" },
-    // MENTAL GENERALS
+  // ========== STEP 2: KEYWORD MATCHING RULE ==========
+  const keywordPatterns: Array<{ patterns: RegExp[]; category: string }> = [
+    { patterns: [/\bname\b/, /what.*name/, /who.*you/], category: "name" },
+    { patterns: [/\bage\b/, /how.*old/, /years.*old/], category: "age" },
+    { patterns: [/occupation/, /what.*do/, /doing/, /\bdo\b/, /student/], category: "occupation" },
+    { patterns: [/marri/, /married/, /single/, /spouse/], category: "marriage" },
+    { patterns: [/address/, /where.*live/, /living/], category: "address" },
+    { patterns: [/complaint/, /complain/, /chief/, /problem/, /pcod/, /period/, /mense/, /cycle/], category: "complaint" },
+    { patterns: [/where.*pain/, /which.*side/, /location.*pain/, /where.*exact/], category: "location" },
+    { patterns: [/sensation/, /how.*feel/, /how.*pain/], category: "sensation" },
+    { patterns: [/aggravat/, /\bworse\b/, /worsen/, /modality/], category: "aggravation" },
+    { patterns: [/ameliorat/, /relief/, /\bbetter\b/, /improve/], category: "amelioration" },
+    { patterns: [/concomitant/, /other.*symptom/, /weight/, /\bmood\b/], category: "concomitant" },
+    { patterns: [/onset/, /when.*start/, /when.*began/], category: "onset" },
+    { patterns: [/duration/, /how.*long/, /how.*many/, /how.*much.*time/], category: "duration" },
+    { patterns: [/progression/, /how.*increas/, /progressive/, /worsening/], category: "progression" },
+    { patterns: [/\bhistory\b/, /\bpast\b/, /before/], category: "history" },
+    { patterns: [/family/, /parents/, /mother/, /father/], category: "family" },
+    { patterns: [/appetite/, /hunger/, /\beat\b/, /eating/, /meal/], category: "appetite" },
+    { patterns: [/thirst/, /thirsty/, /\bwater\b/, /\bdrink\b/], category: "thirst" },
+    { patterns: [/\btongue\b/], category: "tongue" },
+    { patterns: [/urine/, /urinate/, /pass.*urine/], category: "urine" },
+    { patterns: [/stool/, /bowel/, /constipat/], category: "stool" },
+    { patterns: [/desire/, /craving/, /sweet/], category: "desire" },
+    { patterns: [/aversion/, /dislike/, /don't.*like/], category: "aversion" },
+    { patterns: [/sweat/, /perspir/], category: "sweat" },
+    { patterns: [/\bsleep\b/, /sleeping/, /rest/], category: "sleep" },
+    { patterns: [/\bdream/, /dreaming/], category: "dream" },
+    { patterns: [/thermal/, /cold/, /\bheat\b/, /fever/, /chilly/], category: "thermal" },
     {
-      keywords: [/mental/, /anger/, /angry/, /irritable/, /anxiety/, /mood/, /fear/, /sad/, /emotional/],
+      patterns: [
+        /mental/,
+        /\banger\b/,
+        /angry/,
+        /irritable/,
+        /irritat/,
+        /\banxiety\b/,
+        /anxious/,
+        /\bmood\b/,
+        /\bmind\b/,
+        /fear/,
+        /\bsad\b/,
+        /emotional/,
+      ],
       category: "mental",
     },
   ]
 
-  // ===== STRICT KEYWORD DETECTION: Match detected keywords =====
-  for (const { keywords: patterns, category } of detectionPatterns) {
+  // Match keywords and return response
+  for (const { patterns, category } of keywordPatterns) {
     for (const pattern of patterns) {
       if (pattern.test(q)) {
-        const responses = keywordResponses[category]
-        if (responses && responses.length > 0) {
-          // Return random response from matched category (alternating responses)
-          return responses[Math.floor(Math.random() * responses.length)]
+        const categoryResponses = responses[category]
+        if (categoryResponses && categoryResponses.length > 0) {
+          // Rotate randomly between available responses
+          return categoryResponses[Math.floor(Math.random() * categoryResponses.length)]
         }
       }
     }
   }
 
-  // ===== NO KEYWORD MATCH: Return fixed fallback =====
-  // Strict rule: Do NOT generate, do NOT ask to rephrase, do NOT provide AI assistant response
+  // ========== STEP 3: NO KEYWORD MATCHES — FIXED FALLBACK ONLY ==========
   return "I don't notice anything specific about that."
 }
