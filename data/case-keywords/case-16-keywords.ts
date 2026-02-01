@@ -1,14 +1,14 @@
 /**
  * CASE 16 - RUHI (PULSATILLA NIGRICANS)
  * PCOD (Polycystic Ovarian Disease)
- * Patient: Mild, soft, emotional, tearful, seeks reassurance, changeable mood
- * Remedy: PULSATILLA NIGRICANS - Irregular delayed menses, better by consolation & fresh air, thirstless
  * 
- * SYSTEM: Robust keyword detection with natural language processing
- * - Handles casual greetings (h/H, o/O)
- * - Detects keywords from natural user language
- * - Maps to appropriate PULSATILLA responses
- * - Never fails to respond
+ * STRICT RESPONSE CONTROL:
+ * - Patient responds ONLY with predefined keyword → response mappings
+ * - No AI-generated answers or paraphrasing
+ * - No generic assistant fallbacks
+ * - Strict keyword matching with symptom priority
+ * - Fixed fallback: "I don't notice anything specific about that."
+ * - Maintains PULSATILLA personality (mild, emotional, soft, tearful)
  */
 
 export function detectAndRespond(question: string): string {
@@ -133,214 +133,84 @@ export function detectAndRespond(question: string): string {
     ],
   }
 
-  // ===== PRIORITY 2: ROBUST KEYWORD PATTERN DETECTION =====
+  // ===== PRIORITY 2: STRICT KEYWORD PATTERN DETECTION =====
+  // Maps user keywords to exact response categories
   const detectionPatterns = [
-    // NAME - Keywords: name, what+name
+    // NAME
+    { keywords: [/\bname\b/, /what\s+.*\bname/, /who\s+are\s+you/], category: "name" },
+    // AGE
+    { keywords: [/\bage\b/, /how\s+old/, /years\s+old/], category: "age" },
+    // OCCUPATION
+    { keywords: [/occupation/, /what\s+.*do/, /student/, /work/], category: "occupation" },
+    // MARITAL STATUS
+    { keywords: [/marri/, /married/, /single/], category: "marriage" },
+    // ADDRESS
+    { keywords: [/address/, /where.*live/, /living/], category: "address" },
+    // CHIEF COMPLAINT
+    { keywords: [/complaint/, /problem/, /pcod/, /period/, /mense/, /cycle/], category: "complaint" },
+    // LOCATION
+    { keywords: [/where.*pain/, /which.*side/, /location.*pain/], category: "location" },
+    // SENSATION
+    { keywords: [/sensation/, /how.*feel/, /how.*pain/], category: "sensation" },
+    // AGGRAVATION
+    { keywords: [/aggravat/, /worse/, /worsen/], category: "aggravation" },
+    // AMELIORATION
+    { keywords: [/ameliorat/, /relief/, /better/, /help/], category: "amelioration" },
+    // CONCOMITANT
+    { keywords: [/concomitant/, /other.*symptom/, /weight/, /mood/], category: "concomitant" },
+    // ONSET
+    { keywords: [/onset/, /when.*start/, /when.*began/], category: "onset" },
+    // DURATION
+    { keywords: [/duration/, /how.*long/, /how.*many/], category: "duration" },
+    // PROGRESSION
+    { keywords: [/progression/, /how.*increas/, /worsening/], category: "progression" },
+    // HISTORY
+    { keywords: [/history/, /past/], category: "history" },
+    // FAMILY
+    { keywords: [/family/, /parents/, /mother/], category: "family" },
+    // APPETITE
+    { keywords: [/appetite/, /hunger/, /eat/, /meal/], category: "appetite" },
+    // THIRST
+    { keywords: [/thirst/, /thirsty/, /water/, /drink/], category: "thirst" },
+    // TONGUE
+    { keywords: [/tongue/], category: "tongue" },
+    // URINE
+    { keywords: [/urine/, /urinate/], category: "urine" },
+    // STOOL
+    { keywords: [/stool/, /bowel/, /constipat/], category: "stool" },
+    // DESIRE
+    { keywords: [/desire/, /craving/, /sweet/], category: "desire" },
+    // AVERSION
+    { keywords: [/aversion/, /dislike/, /don't.*like/], category: "aversion" },
+    // SWEAT
+    { keywords: [/sweat/, /perspir/], category: "sweat" },
+    // SLEEP
+    { keywords: [/sleep/, /sleeping/, /rest/], category: "sleep" },
+    // DREAMS
+    { keywords: [/dream/, /dreaming/], category: "dream" },
+    // THERMALS
+    { keywords: [/thermal/, /cold/, /heat/, /fever/], category: "thermal" },
+    // MENTAL GENERALS
     {
-      keywords: [/\bname\b/, /what\s+.*\bname/, /who\s+are\s+you/, /who.*you\s+are/],
-      category: "name",
-    },
-    // AGE - Keywords: age, how+old+you
-    {
-      keywords: [/\bage\b/, /how\s+old\s+are?\s+you/, /how\s+.*\s+years/, /years\s+old/],
-      category: "age",
-    },
-    // OCCUPATION - Keywords: occupation, what+do, doing, do
-    {
-      keywords: [
-        /\boccupation\b/,
-        /what\s+.*\bdo\b.*you/,
-        /what\s+.*\bdoing\b/,
-        /\bdo\b.*you/,
-        /work/,
-        /student/,
-        /studying/,
-      ],
-      category: "occupation",
-    },
-    // MARITAL STATUS - Keywords: marriage, married, single
-    {
-      keywords: [/marri/, /married/, /single/, /spouse/, /husband/, /wife/],
-      category: "marriage",
-    },
-    // ADDRESS - Keywords: address, where+live, living
-    {
-      keywords: [/\baddress\b/, /where\s+.*\blive\b/, /living/, /\bcity\b/, /\btown\b/, /location/],
-      category: "address",
-    },
-    // CHIEF COMPLAINT - Keywords: main+complain, complaint, chief+complaint
-    {
-      keywords: [
-        /main\s+.*\bcomplain/,
-        /\bcomplaint\b/,
-        /chief\s+.*\bcomplain/,
-        /problem/,
-        /pcod/,
-        /period/,
-        /mense/,
-        /cycle/,
-        /issue/,
-      ],
-      category: "complaint",
-    },
-    // LOCATION - Keywords: where+pain, which+side, location+pain
-    {
-      keywords: [/where\s+.*\bpain/, /which\s+.*\bside/, /location\s+.*\bpain/, /where.*exact/],
-      category: "location",
-    },
-    // SENSATION - Keywords: sensation, how+sensation, how+feel, how+pain
-    {
-      keywords: [/\bsensation\b/, /how\s+.*\bsensation/, /how\s+.*\bfeel/, /how\s+.*\bpain/],
-      category: "sensation",
-    },
-    // AGGRAVATION - Keywords: aggravation, aggravates, worse, worsen
-    {
-      keywords: [/\baggravat/, /\bworse\b/, /worsen/, /modality/, /when\s+.*\bworse/, /make.*worse/],
-      category: "aggravation",
-    },
-    // AMELIORATION - Keywords: amelioration, ameliorates, relief, better
-    {
-      keywords: [/\bameliorat/, /\brelief\b/, /\bbetter\b/, /improve/, /when\s+.*\brelief/, /help/],
-      category: "amelioration",
-    },
-    // CONCOMITANT - Keywords: concomitant, any+other+complaint, other
-    {
-      keywords: [/\bconcomitant\b/, /any\s+.*\bother/, /other\s+.*\bsymptom/, /weight/, /mood/],
-      category: "concomitant",
-    },
-    // ONSET - Keywords: onset, when+start, when+started, when+begins
-    {
-      keywords: [/\bonset\b/, /when\s+.*\bstart/, /when\s+.*\bbegan/, /began/, /begin/],
-      category: "onset",
-    },
-    // DURATION - Keywords: duration, how+long, how+many+days, how+much+time
-    {
-      keywords: [/\bduration\b/, /how\s+.*\blong/, /how\s+many\s+.*\bday/, /how\s+.*\bmonth/, /how\s+much\s+time/],
-      category: "duration",
-    },
-    // PROGRESSION - Keywords: progression, how+increase, how+progressive
-    {
-      keywords: [/\bprogression\b/, /how\s+.*\bincreas/, /progressive/, /worsening/, /getting\s+worse/],
-      category: "progression",
-    },
-    // HISTORY OF PRESENT ILLNESS - Keywords: history, any+history, past, in+past
-    {
-      keywords: [/\bhistory\b/, /any\s+.*\bhistory/, /\bpast\b/, /in\s+.*\bpast/, /before/],
-      category: "history",
-    },
-    // FAMILY HISTORY - Keywords: family, parents, partner, family+history
-    {
-      keywords: [/\bfamily\b/, /parents/, /partner/, /sibling/, /mother/, /father/],
-      category: "family",
-    },
-    // APPETITE - Keywords: appetite, hunger, eat, eating, meal
-    {
-      keywords: [/\bappetite\b/, /\bhunger\b/, /\beat\b/, /eating/, /meal/, /food/],
-      category: "appetite",
-    },
-    // THIRST - Keywords: thirst, thirsty, water, water+drink
-    {
-      keywords: [/\bthirst\b/, /thirsty/, /\bwater\b/, /\bdrink\b/, /fluid/],
-      category: "thirst",
-    },
-    // TONGUE - Keywords: tongue
-    {
-      keywords: [/\btongue\b/],
-      category: "tongue",
-    },
-    // URINE - Keywords: urine, urinate, urinates, pass+urine
-    {
-      keywords: [/\burine\b/, /urinate/, /pass\s+.*\burine/],
-      category: "urine",
-    },
-    // STOOL - Keywords: stool, bowel, constipation
-    {
-      keywords: [/\bstool\b/, /\bbowel\b/, /constipat/],
-      category: "stool",
-    },
-    // DESIRE - Keywords: desire, craving, food+like, like+eat
-    {
-      keywords: [/\bdesire\b/, /craving/, /like\s+.*\beat/, /fancy/, /sweet/],
-      category: "desire",
-    },
-    // AVERSION - Keywords: aversion, dislike, don't+like
-    {
-      keywords: [/\baversion\b/, /dislike/, /don't\s+.*\blike/, /hate/, /oily/],
-      category: "aversion",
-    },
-    // SWEAT - Keywords: sweat, perspiration, how+sweat
-    {
-      keywords: [/\bsweat\b/, /perspir/, /moisture/],
-      category: "sweat",
-    },
-    // SLEEP - Keywords: sleep, sleeping, sleep+problem
-    {
-      keywords: [/\bsleep\b/, /sleeping/, /sleep\s+.*\bproblem/, /rest/, /insomnia/],
-      category: "sleep",
-    },
-    // DREAMS - Keywords: dream, dreams, dreaming
-    {
-      keywords: [/\bdream/, /dreaming/, /nightmare/],
-      category: "dream",
-    },
-    // THERMALS - Keywords: thermal, cold, heat, fever, chilly
-    {
-      keywords: [/thermal/, /\bcold\b/, /\bheat\b/, /fever/, /chilly/],
-      category: "thermal",
-    },
-    // MENTAL GENERALS - Extensive keywords
-    {
-      keywords: [
-        /mental/,
-        /\banger\b/,
-        /angry/,
-        /irritable/,
-        /irritat/,
-        /\banxiety\b/,
-        /anxious/,
-        /\bmood\b/,
-        /\bmind\b/,
-        /fear/,
-        /\bsad\b/,
-        /emotional/,
-        /comfort/,
-        /console/,
-      ],
+      keywords: [/mental/, /anger/, /angry/, /irritable/, /anxiety/, /mood/, /fear/, /sad/, /emotional/],
       category: "mental",
     },
   ]
 
-  // ===== DETECTION: Try all patterns =====
+  // ===== STRICT KEYWORD DETECTION: Match detected keywords =====
   for (const { keywords: patterns, category } of detectionPatterns) {
     for (const pattern of patterns) {
       if (pattern.test(q)) {
         const responses = keywordResponses[category]
         if (responses && responses.length > 0) {
+          // Return random response from matched category (alternating responses)
           return responses[Math.floor(Math.random() * responses.length)]
         }
       }
     }
   }
 
-  // ===== PRIORITY 3: CORE PCOD/PERIOD TERMS (fallback) =====
-  if (/pcod|period|mense|cycle|hormone|ovarian|gynec/.test(q)) {
-    const pcoodResponses = [
-      "My periods are very irregular doctor… (sad face) sometimes they stop for months.",
-      "I have PCOD doctor… (tearful eyes) cycles are disturbed.",
-    ]
-    return pcoodResponses[Math.floor(Math.random() * pcoodResponses.length)]
-  }
-
-  // ===== PRIORITY 4: SYSTEM NEVER FAILS - All responses =====
-  const allResponses: string[] = []
-  for (const responseList of Object.values(keywordResponses)) {
-    allResponses.push(...responseList)
-  }
-
-  if (allResponses.length > 0) {
-    return allResponses[Math.floor(Math.random() * allResponses.length)]
-  }
-
-  // ===== FINAL FALLBACK =====
-  return "Please ask me more clearly doctor… I prefer gentle conversations."
+  // ===== NO KEYWORD MATCH: Return fixed fallback =====
+  // Strict rule: Do NOT generate, do NOT ask to rephrase, do NOT provide AI assistant response
+  return "I don't notice anything specific about that."
 }
